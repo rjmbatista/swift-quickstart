@@ -23,30 +23,23 @@
 
 import UIKit
 import Auth0
+import Lock
 
 class HomeViewController: UIViewController {
     
     // MARK: - IBAction
     @IBAction func showLoginController(_ sender: UIButton) {
-        
-        Auth0
-            .webAuth()
-            .start {
-                switch $0 {
-                    
-                case .failure(let error):
-                    print("Error: \(error)")
                 
-                case .success(let credentials):
-                    
-                    guard let accessToken = credentials.accessToken else {
-                        print("Error: No access token found in the credentials")
-                        return
-                    }
-                    
-                    print("Access Token: \(accessToken)")
-                }
-        }
+        Lock
+            .classic()
+            .withOptions {
+                $0.logLevel = .all
+                $0.logHttpRequest = true
+            }
+            .onAuth { credentials in
+                // Save the Credentials object
+            }
+            .present(from: self)
         
     }
     
